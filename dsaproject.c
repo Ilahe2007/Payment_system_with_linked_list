@@ -649,6 +649,75 @@ void displayStudentTransactionsOnDate(BlockChain *bc, int studentID, char *date)
     }
 }
 
+// Search for transactions with specific description
+// bc - Pointer to the blockchain 
+void searchByDescription(BlockChain *bc) {
+    if (bc == NULL) {
+        printf("Error: Blockchain is not initialized.\n");
+        return;
+    }
+    
+    char searchTerm[256];
+    printf("Enter search term: ");
+    scanf(" %[^\n]", searchTerm); 
+    
+    if (strlen(searchTerm) == 0) {
+        printf("Error: Empty search term.\n");
+        return;
+    }
+    
+    T_Block *currentBlock = bc->blocks;
+    int matchCount = 0;
+    
+    printf("\nSearch results for: %s\n", searchTerm);
+    printf("----------------------------------------\n");
+    
+    // Convert search term to lowercase for correct comparison
+    char searchTermLower[256];
+    strncpy(searchTermLower, searchTerm, sizeof(searchTermLower) - 1);
+    searchTermLower[sizeof(searchTermLower) - 1] = '\0';
+    for (int i = 0; searchTermLower[i]; i++) {
+        searchTermLower[i] = tolower(searchTermLower[i]);
+    }
+    
+    // Look through all blocks
+    while (currentBlock != NULL) {
+        T_Transaction *currentTransaction = currentBlock->transactions;
+        
+        // Look through all transactions in the current block
+        while (currentTransaction != NULL) {
+            if (currentTransaction->descr != NULL) {
+                // Create a lowercase copy of the description for correct comparison
+                char descLower[256];
+                strncpy(descLower, currentTransaction->descr, sizeof(descLower) - 1);
+                descLower[sizeof(descLower) - 1] = '\0';
+                for (int i = 0; descLower[i]; i++) {
+                    descLower[i] = tolower(descLower[i]);
+                }
+                
+                // Check if searchTerm is in description
+                if (strstr(descLower, searchTermLower) != NULL) {
+                    // Print transaction details
+                    printf("Block %d | Date: %s | Student ID: %d | Amount: %.2f | Description: %s\n",
+                           currentBlock->identifier, currentBlock->date,
+                           currentTransaction->studentID, currentTransaction->amount,
+                           currentTransaction->descr);
+                    matchCount++;
+                }
+            }
+            currentTransaction = currentTransaction->next;
+        }
+        currentBlock = currentBlock->next;
+    } 
+    
+    if (matchCount == 0) {
+        printf("No transactions found matching the search term: %s\n", searchTerm);
+    } else {
+        printf("----------------------------------------\n");
+        printf("Found %d matching transactions.\n", matchCount);
+    }
+}
+
 // Wait for user to press any key before continuing
 // Used for pausing program execution until user input
 void waitForKeyPress() {
@@ -670,6 +739,7 @@ void displayMenu(int highlight) {
         "Refund",
         "Pay for a meal",
         "Transfer EATCoins between two students",
+        "Search transactions by description",
         "Export all transactions to a file Darkbuys",
         "Import all transactions from a file Darkbuys",
         "Exit"
@@ -850,8 +920,16 @@ void menu(BlockChain *bc) {
                         break;
                     }
                     
-                    // 8 - Export transactions to file
+                    // 8 - Search transactions by description
                     case 8: {
+                        clear();
+                        searchByDescription(bc);
+                        waitForKeyPress();
+                        break;
+                    }
+                    
+                    // 9 - Export transactions to file
+                    case 9: {
                         clear();
                         if(bc->blocks == NULL){
                             printw("Please first import a file.");
@@ -862,16 +940,16 @@ void menu(BlockChain *bc) {
                         break;
                     }
                     
-                    // 9 - Import transactions from file
-                    case 9: {
+                    // 10 - Import transactions from file
+                    case 10: {
                         clear();
                         importTransactions(bc, "Darkbuys.txt");
                         waitForKeyPress();
                         break;
                     }
                     
-                    // 10 - Exit the program
-                    case 10: {
+                    // 11 - Exit the program
+                    case 11: {
                         endwin();  // Clean up ncurses
                         exit(0);   // Exit the program
                     }
