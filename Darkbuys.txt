@@ -1,0 +1,13 @@
+2024/01/15; 101; 50.00; Initial deposit
+2024/01/15; 102; 100.00; Initial deposit
+2024/01/15; 103; 75.00; Initial deposit
+2024/01/16; 101; -12.50; Lunch cafeteria
+2024/01/16; 102; -8.00; Coffee shop
+2024/01/16; 101; -15.00; Dinner cafeteria
+2024/01/17; 103; -20.00; Pizza order
+2024/01/17; 101; 30.00; Parent transfer
+2024/01/17; 102; -10.00; Snack bar
+2024/01/18; 101; -5.50; Breakfast
+2024/01/18; 102; 25.00; Scholarship credit
+2024/01/18; 103; -12.00; Lunch meal
+
