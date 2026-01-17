@@ -53,3 +53,5 @@ void displayAllStudentTransactions(BlockChain *bc, int studentID); // Show all t
 int removeTransaction(BlockChain *bc, int studentID, int transactionIndex); // Remove a specific transaction
 
 void processRefund(BlockChain *bc); // Make refund
+
+void searchByDescription(BlockChain *bc); // Search transactions by description
